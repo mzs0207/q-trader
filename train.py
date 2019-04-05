@@ -52,4 +52,4 @@ for e in xrange(episode_count + 1):
             agent.expReplay(batch_size)
 
     if e % 10 == 0:
-        agent.model.save("models/{0}_model_ep_{1}".format(stock_name, e + agent.episode))
+        agent.model.save("models/{0}_model_ep{1}".format(stock_name, e + agent.episode))
