@@ -66,6 +66,10 @@ class Agent:
 
     def load_existing_model(self):
 
+        if self.model_name:
+            print("load model {0}".format(self.model_name))
+            return load_model('models/{0}'.format(self.model_name))
+
         if not os.path.exists('models'):
             raise Exception("models not exists,please create")
         models = os.listdir('models')
