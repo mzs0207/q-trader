@@ -45,9 +45,9 @@ def get_state_rsi(data, t, n):
     :return:
     """
     item_data = np.array(data[t: t + n])
-    v1 = talib.RSI(item_data, timeperiod=int(n / 3))[-1]
-    v2 = talib.RSI(item_data, timeperiod=int(n / 3 * 2))[-1]
-    v3 = talib.RSI(item_data, timeperiod=n - 1)[-1]
+    v1 = talib.RSI(item_data, timeperiod=20)[-1]
+    v2 = talib.RSI(item_data, timeperiod=60)[-1]
+    v3 = talib.RSI(item_data, timeperiod=300)[-1]
     # print int(n / 3), int(n / 3 * 2), n - 1
     return np.array([[v1, v2, v3]]) / 100
 
