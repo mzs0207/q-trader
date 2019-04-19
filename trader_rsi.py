@@ -33,7 +33,7 @@ while 1:
     action = agent.act(state)
     print "{0} action:{1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), action)
     reward = 0
-    if action == 1 and action != last_action:  # buy
+    if action == 2 and action != last_action:  # buy
         if hold == 0:
             hold += 30
             last_price = data[-1]
@@ -52,7 +52,7 @@ while 1:
             last_price = data[-1]
         last_action = action
 
-    elif action == 2 and action != last_action:  # sell
+    elif action == 1 and action != last_action:  # sell
         if hold == 0:
             hold -= 30
             last_price = data[-1]
