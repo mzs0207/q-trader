@@ -63,7 +63,7 @@ while 1:
             total_profit += (1.0/last_price - 1.0/data[-1]) * 30 * 1000
             hold -= 60
             reward = max(data[-1] - last_price, 0)
-            s = "Close and open positions.first :buy {0} sell:{1}  second:{1}".format(last_price, data[-1])
+            s = "Close and open positions.first :buy {0} sell:{1}  second: sell {1}".format(last_price, data[-1])
             print s
             send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
 
@@ -75,7 +75,11 @@ while 1:
     print 'sleep count:', sleep_count
     time.sleep(sleep_count + 1)
     data = get_bitmex_data()
-    next_state = getState(data[:-1], 0, 300 + 1)
+    next_state = get_state_rsi(data[:-1], 0, 300 + 1)
+    # print 'next_state', next_state
+    # print 'state', state
+    # print 'action', action
+    # print 'reward', reward
     agent.memory.append((state, action, reward, next_state, False))
     state = next_state
     if len(agent.memory) > batch_size:
