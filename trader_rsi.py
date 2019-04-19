@@ -37,12 +37,14 @@ while 1:
         if hold == 0:
             hold += 30
             last_price = data[-1]
+            total_profit -= 30.0/data[-1] * 0.0075
             s = "Open positions,buy {0}".format(data[-1])
             print s
             send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
         elif hold < 0:
             total_profit += (1.0/data[-1] - 1.0/last_price) * 30 * 1000
             hold += 60
+            total_profit -= 60.0 / data[-1] * 0.0075
             reward = max(last_price - data[-1], 0)
             s = "Close and open positions.first :buy:{0} sell:{1}  second: buy:{0}".format(data[-1], last_price)
             print s
@@ -56,6 +58,7 @@ while 1:
         if hold == 0:
             hold -= 30
             last_price = data[-1]
+            total_profit -= 30.0 / data[-1] * 0.0075
             s = "Open positions, sell {0}".format(data[-1])
             print s
             send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
@@ -63,6 +66,7 @@ while 1:
             total_profit += (1.0/last_price - 1.0/data[-1]) * 30 * 1000
             hold -= 60
             reward = max(data[-1] - last_price, 0)
+            total_profit -= 60.0 / data[-1] * 0.0075
             s = "Close and open positions.first :buy {0} sell:{1}  second: sell {1}".format(last_price, data[-1])
             print s
             send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
