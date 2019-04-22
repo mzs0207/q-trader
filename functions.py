@@ -11,13 +11,16 @@ def formatPrice(n):
 
 # returns the vector containing stock data from a fixed file
 def getStockDataVec(key):
-    vec = []
+    price_vec = []
+    money_vec = []
     lines = open("data/" + key + ".csv", "r").read().splitlines()
 
     for line in lines[1:]:
-        vec.append(float(line.split(",")[4]))
+        arr = line.split(",")
+        price_vec.append(float(arr[4]))
+        money_vec.append(float(arr[7]) / 1000000.0)
 
-    return vec
+    return price_vec, money_vec
 
 
 # returns the sigmoid
