@@ -17,8 +17,10 @@ def getStockDataVec(key):
 
     for line in lines[1:]:
         arr = line.split(",")
-        price_vec.append(float(arr[4]))
-        money_vec.append(float(arr[7]) / 1000000.0)
+        total_money = (float(arr[5]) + float(arr[6]))
+        if total_money > 0:
+            price_vec.append(float(arr[4]))
+            money_vec.append(float(arr[5]) / total_money)
 
     return price_vec, money_vec
 
@@ -34,7 +36,8 @@ def getState(data, t, n):
     block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1]  # pad with t0
     res = []
     for i in xrange(n - 1):
-        res.append(sigmoid(block[i + 1] - block[i]))
+        #res.append(sigmoid(block[i + 1] - block[i]))
+        res.append(block[i + 1] - block[i])
 
     return np.array([res])
 
