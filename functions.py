@@ -23,9 +23,9 @@ def getStockDataVec(key):
             price_vec.append(float(arr[4]))
             temp_arr.append(float(arr[5]) / total_money)
             # open - close
-            temp_arr.append(float(arr[1]) - float(arr[4]))
+            temp_arr.append((float(arr[1]) - float(arr[4]))/ float(arr[4]))
             # high - low
-            temp_arr.append(float(arr[2]) - float(arr[3]))
+            temp_arr.append((float(arr[2]) - float(arr[3]))/float(arr[3]))
             money_vec.append(temp_arr)
 
     return price_vec, money_vec
@@ -46,8 +46,8 @@ def getState(data, t, n):
         #res.append(block[i + 1] - block[i])
         temp_arr = block[i]
         res.append(temp_arr[0])
-        res.append(sigmoid(temp_arr[1]))
-        res.append(sigmoid(temp_arr[2]))
+        res.append(temp_arr[1])
+        res.append(temp_arr[2])
 
     return np.array([res])
 
@@ -69,7 +69,9 @@ def get_state_rsi(data, t, n):
 
 
 if __name__ == '__main__':
-    data = getStockDataVec('^GSPC')
-    print get_state_rsi(data, 0, 31)
-    print getState(data, 0, 10)
+    data = getStockDataVec('k_data_10')[1]
+    for item in data:
+        print item
+        print
+
 
