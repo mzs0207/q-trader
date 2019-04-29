@@ -21,11 +21,11 @@ def getStockDataVec(key):
         temp_arr = []
         if total_money > 0:
             price_vec.append(float(arr[4]))
-            temp_arr.append(float(arr[5]) / total_money)
+            temp_arr.append(float(arr[7]) / (float(arr[4]) * 10000.0))
             # open - close
-            temp_arr.append((float(arr[1]) - float(arr[4]))/ float(arr[4]))
+            temp_arr.append((float(arr[1]) - float(arr[4])) / float(arr[4]))
             # high - low
-            temp_arr.append((float(arr[2]) - float(arr[3]))/float(arr[3]))
+            temp_arr.append((float(arr[2]) - float(arr[3])) / float(arr[3]))
             money_vec.append(temp_arr)
 
     return price_vec, money_vec
