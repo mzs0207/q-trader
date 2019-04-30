@@ -38,7 +38,8 @@ for e in xrange(episode_count + 1):
         elif action == 2 and len(agent.inventory) > 0:  # sell
             bought_price = agent.inventory.pop(0)
             #reward = max(price_data[t] - bought_price, 0)
-            reward = (price_data[t] - bought_price) / bought_price * 100
+            pct = (price_data[t] - bought_price) / bought_price * 100
+            reward = max(pct, 0)
             total_profit += price_data[t] - bought_price
             print "Sell: " + formatPrice(price_data[t]) + " | Profit: " + formatPrice(price_data[t] - bought_price) + " | Total Profit: " + formatPrice(total_profit)
             total_profits.append(str(total_profit))
