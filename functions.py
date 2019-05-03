@@ -27,11 +27,8 @@ def getStockDataVec(key):
             price_vec.append(close_price)
 
             volume = float(arr[7]) / (close_price)
-            volume = volume / 10000.0
-
-            temp_arr.append((close_price - open_price)/open_price)
-            temp_arr.append((high_price - open_price)/open_price)
-            temp_arr.append((low_price - open_price)/open_price)
+            volume = volume / 1000.0
+            temp_arr.append(volume)
 
             money_vec.append(temp_arr)
 
@@ -52,9 +49,7 @@ def getState(data, t, n):
         #res.append(sigmoid(block[i + 1] - block[i]))
         #res.append(block[i + 1] - block[i])
         temp_arr = block[i]
-        res.append(temp_arr[0])
-        res.append(temp_arr[1])
-        res.append(temp_arr[2])
+        res.append(sigmoid(temp_arr[0]))
 
     return np.array([res])
 
