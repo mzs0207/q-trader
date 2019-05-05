@@ -14,12 +14,15 @@ def getStockDataVec(key):
     price_vec = []
     money_vec = []
     lines = open("data/" + key + ".csv", "r").read().splitlines()
-
+    p = 0.6
+    t = 1
+    mean_volume = 0
     for line in lines[1:]:
         arr = line.split(",")
         total_money = (float(arr[5]) + float(arr[6]))
         temp_arr = []
         if total_money > 0:
+            t += 1
             close_price = float(arr[4])
             open_price = float(arr[1])
             high_price = float(arr[2])
@@ -28,7 +31,11 @@ def getStockDataVec(key):
 
             volume = float(arr[7]) / (close_price)
             volume = volume / 1000.0
-            temp_arr.append(volume)
+            #temp_arr.append(volume)
+            mean_volume = p * mean_volume + (1 - p) * volume
+            mean_volume = mean_volume / (1 - math.pow(p, t))
+            temp_arr.append(mean_volume)
+            #print mean_volume
 
             money_vec.append(temp_arr)
 
@@ -49,7 +56,7 @@ def getState(data, t, n):
         #res.append(sigmoid(block[i + 1] - block[i]))
         #res.append(block[i + 1] - block[i])
         temp_arr = block[i]
-        res.append(sigmoid(temp_arr[0]))
+        res.append(temp_arr[0])
 
     return np.array([res])
 
@@ -72,8 +79,8 @@ def get_state_rsi(data, t, n):
 
 if __name__ == '__main__':
     data = getStockDataVec('k_data_10')[1]
-    for item in data:
-        print item
-        print
+    # for item in data:
+    #     print item
+    #     print
 
 
