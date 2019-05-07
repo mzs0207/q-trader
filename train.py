@@ -9,7 +9,7 @@ if len(sys.argv) != 4:
 
 stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 
-agent = Agent(window_size * 1, stock_name)
+agent = Agent(window_size * 6, stock_name)
 price_data, money_data = getStockDataVec(stock_name)
 episode_count -= agent.episode
 l = len(price_data) - 1
