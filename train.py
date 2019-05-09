@@ -40,6 +40,7 @@ for e in xrange(episode_count + 1):
             #reward = max(price_data[t] - bought_price, 0)
             pct = (price_data[t] - bought_price) / bought_price * 100
             reward = max(pct, 0)
+            reward = pct
             #total_profit += price_data[t] - bought_price
             this_profit = 100 * (price_data[t] - bought_price) / bought_price
             total_profit = total_profit + this_profit
