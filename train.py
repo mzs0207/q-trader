@@ -54,7 +54,9 @@ for e in xrange(episode_count + 1):
 
         if done:
             for bought_price in agent.inventory:
-                total_profit += price_data[t] - bought_price
+                #total_profit += price_data[t] - bought_price
+                this_profit = 100 * (price_data[t] - bought_price) / bought_price
+                total_profit = total_profit + this_profit
             agent.inventory = []
             print "--------------------------------"
             print "Total Profit: " + formatPrice(total_profit)
