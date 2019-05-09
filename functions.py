@@ -15,7 +15,10 @@ def getStockDataVec(key):
     money_vec = []
     lines = open("data/" + key + ".csv", "r").read().splitlines()
 
-    mean_volume = 0
+    mean_total_volume = 0
+    last_close = 0
+    t = 1
+    p = 0.8
     for line in lines[1:]:
         arr = line.split(",")
         total_money = (float(arr[5]) + float(arr[6]))
@@ -33,14 +36,24 @@ def getStockDataVec(key):
             #temp_arr.append(mean_volume)
             #print mean_volume
             #print volume
+            total_volume = (float(arr[5]) + float(arr[6])) / close_price
+            mean_total_volume = mean_total_volume * p + (1 - p) * total_volume
+            mean_total_volume = mean_total_volume/(1 - math.pow(p, t))
             temp_arr.append((high_price - low_price)/low_price)
             temp_arr.append((high_price - open_price)/open_price)
             temp_arr.append((low_price - close_price)/close_price)
             temp_arr.append((low_price - open_price)/open_price)
             temp_arr.append((close_price - open_price)/open_price)
-            temp_arr.append(sigmoid(volume))
+            if last_close == 0:
+                temp_arr.append(0)
+            else:
+                temp_arr.append((close_price - last_close)/last_close)
+            v = total_volume/mean_total_volume
+            temp_arr.append(v)
 
             money_vec.append(temp_arr)
+            last_close = close_price
+            t += 1
 
     return price_vec, money_vec
 
