@@ -17,6 +17,9 @@ def getStockDataVec(key):
 
     mean_total_volume = 0
     last_close = 0
+    last_open = 0
+    last_low = 0
+    last_high = 0
     t = 1
     p = 0.8
     for line in lines[1:]:
@@ -48,11 +51,28 @@ def getStockDataVec(key):
                 temp_arr.append(0)
             else:
                 temp_arr.append((close_price - last_close)/last_close)
+            if last_open == 0:
+                temp_arr.append(0)
+            else:
+                temp_arr.append((open_price - last_open)/last_open)
+
+            if last_low == 0:
+                temp_arr.append(0)
+            else:
+                temp_arr.append((low_price - last_low)/low_price)
+            if last_high == 0:
+                temp_arr.append(0)
+            else:
+                temp_arr.append((high_price - low_price)/low_price)
+
             v = total_volume/mean_total_volume
             temp_arr.append(v)
 
             money_vec.append(temp_arr)
             last_close = close_price
+            last_high = high_price
+            last_low = low_price
+            last_open = open_price
             t += 1
 
     return price_vec, money_vec
