@@ -101,33 +101,33 @@ while 1:
                 s = "Open positions,buy {0}".format(closes[-1])
                 print s
                 send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
-            elif hold < 0:
-                total_profit += (1.0/closes[-1] - 1.0/last_price) * 30 * 1000
-                hold += 60
-                total_profit -= 60.0 / closes[-1] * 1000 * 0.00075
-                reward = max(last_price - closes[-1], 0)
-                s = "Close and open positions.first :buy:{0} sell:{1}  second: buy:{0}".format(closes[-1], last_price)
-                print s
-                send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
-
-                print "total_profit:{0}".format(total_profit)
-                last_price = closes[-1]
+            # elif hold < 0:
+            #     total_profit += (1.0/closes[-1] - 1.0/last_price) * 30 * 1000
+            #     hold += 60
+            #     total_profit -= 60.0 / closes[-1] * 1000 * 0.00075
+            #     reward = max(last_price - closes[-1], 0)
+            #     s = "Close and open positions.first :buy:{0} sell:{1}  second: buy:{0}".format(closes[-1], last_price)
+            #     print s
+            #     send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
+            #
+            #     print "total_profit:{0}".format(total_profit)
+            #     last_price = closes[-1]
             last_action = action
 
         elif action == 2 and action != last_action:  # sell
-            if hold == 0:
-                hold -= 30
-                last_price = closes[-1]
-                total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
-                s = "Open positions, sell {0}".format(closes[-1])
-                print s
-                send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
+            # if hold == 0:
+            #     hold -= 30
+            #     last_price = closes[-1]
+            #     total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
+            #     s = "Open positions, sell {0}".format(closes[-1])
+            #     print s
+            #     send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
             if hold > 0:
                 total_profit += (1.0/last_price - 1.0/closes[-1]) * 30 * 1000
-                hold -= 60
+                hold -= 30
                 reward = max(closes[-1] - last_price, 0)
-                total_profit -= 60.0 / closes[-1] * 1000.0 * 0.00075
-                s = "Close and open positions.first :buy {0} sell:{1}  second: sell {1}".format(last_price, closes[-1])
+                total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
+                s = "Close positions.first :buy {0} sell:{1} ".format(last_price, closes[-1])
                 print s
                 send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
 
