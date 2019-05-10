@@ -34,12 +34,7 @@ def getStockDataVec(key):
             low_price = float(arr[3])
             price_vec.append(close_price)
 
-            volume = float(arr[7]) / (close_price)
-            volume = volume / 1000.0
-            #temp_arr.append(mean_volume)
-            #print mean_volume
-            #print volume
-            total_volume = (float(arr[5]) + float(arr[6])) / close_price
+            total_volume = float(arr[6])
             mean_total_volume = mean_total_volume * p + (1 - p) * total_volume
             mean_total_volume = mean_total_volume/(1 - math.pow(p, t))
             temp_arr.append((high_price - low_price)/low_price)
