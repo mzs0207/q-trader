@@ -16,8 +16,6 @@ batch_size = 32
 total_profit = 0
 agent.inventory = []
 exchange = ccxt.bitmex()
-hold = 0
-last_price = 0
 
 trade_log_file = os.path.join(os.path.dirname(__file__), 'trade.log')
 logging.basicConfig(
@@ -106,20 +104,21 @@ while 1:
         print "{0} action:{1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), op)
         if action == 1 and len(agent.inventory) < 1:  # buy
 
-            last_price = closes[-1]
+            agent.inventory.append(closes[-1])
             total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
+            print "Buy:{0}".format(closes[-1])
 
         elif action == 2 and len(agent.inventory) > 0:  # sell
-            total_profit += (1.0 / last_price - 1.0 / closes[-1]) * 30 * 1000
+            buy_price = agent.inventory.pop(0)
+            total_profit += (1.0 / buy_price - 1.0 / closes[-1]) * 30 * 1000
             total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
-            s = "Close positions.first :buy {0} sell:{1} ".format(last_price, closes[-1])
+            s = "Close positions.first :buy {0} sell:{1} ".format(buy_price, closes[-1])
             print s
             logging.info(s)
             #send_message(s, "{0} {1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), s))
 
             print "total_profit:{0}".format(total_profit)
             logging.info("total_profit:{0}".format(total_profit))
-            last_price = closes[-1]
     except Exception as e:
         print e.message
         logging.exception(e)
