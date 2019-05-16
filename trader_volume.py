@@ -71,11 +71,11 @@ def get_bitmex_data():
         if last_low == 0:
             temp_arr.append(0)
         else:
-            temp_arr.append((low_price - last_low) / low_price)
+            temp_arr.append((low_price - last_low) / last_low)
         if last_high == 0:
             temp_arr.append(0)
         else:
-            temp_arr.append((high_price - low_price) / low_price)
+            temp_arr.append((high_price - last_high) / last_high)
 
         v = total_volume / mean_total_volume
         temp_arr.append(v)
