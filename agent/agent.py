@@ -4,7 +4,7 @@ from collections import deque
 
 from keras.models import Sequential
 from keras.models import load_model
-from keras.layers import Dense
+from keras.layers import Dense, LSTM, Activation
 from keras.optimizers import Adam
 import numpy as np
 import os
@@ -30,11 +30,20 @@ class Agent:
         self.model = self.load_existing_model()
 
     def _model(self):
+        # model = Sequential()
+        # model.add(Dense(units=128, input_dim=self.state_size, activation="relu"))
+        # model.add(Dense(units=64, activation="relu"))
+        # model.add(Dense(units=32, activation="relu"))
+        # model.add(Dense(units=8, activation="relu"))
+        # model.add(Dense(self.action_size, activation="linear"))
+        # model.compile(loss="mse", optimizer=Adam(lr=0.001))
+
         model = Sequential()
-        model.add(Dense(units=64, input_dim=self.state_size, activation="relu"))
-        model.add(Dense(units=32, activation="relu"))
-        model.add(Dense(units=8, activation="relu"))
-        model.add(Dense(self.action_size, activation="linear"))
+        model.add(LSTM(64, input_shape=self.state_size, return_sequences=True))
+        model.add(LSTM(64))
+        model.add(Dense(32))
+        model.add(Activation('relu'))
+        model.add(Dense(self.action_size, activation='linear'))
         model.compile(loss="mse", optimizer=Adam(lr=0.001))
 
         return model

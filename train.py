@@ -1,4 +1,5 @@
 import sys
+import os
 
 from agent.agent import Agent
 from functions import *
@@ -9,7 +10,7 @@ if len(sys.argv) != 4:
 
 stock_name, window_size, episode_count = sys.argv[1], int(sys.argv[2]), int(sys.argv[3])
 
-agent = Agent(window_size * 10, stock_name)
+agent = Agent((window_size, 11), stock_name)
 price_data, money_data = getStockDataVec(stock_name)
 episode_count -= agent.episode
 l = len(price_data) - 1
@@ -17,12 +18,15 @@ batch_size = 32
 
 total_profits = []
 
+
 for e in xrange(episode_count + 1):
     print "Episode " + str(e) + "/" + str(episode_count)
     state = getState(money_data, 0, window_size + 1)
 
     total_profit = 0
     agent.inventory = []
+    sucess_count = 0.0
+    total_count = 0.0
 
     for t in xrange(window_size, l):
         action = agent.act(state)
@@ -45,6 +49,9 @@ for e in xrange(episode_count + 1):
             this_profit = 100 * (price_data[t] - bought_price) / bought_price
             total_profit = total_profit + this_profit
             print "Sell: " + formatPrice(price_data[t]) + " | Profit: " + formatPrice(this_profit) + " | Total Profit: " + formatPrice(total_profit)
+            total_count += 1.0
+            if this_profit > 0:
+                sucess_count += 1.0
             total_profits.append(str(total_profit))
 
         done = True if t == l - 1 else False
@@ -57,17 +64,26 @@ for e in xrange(episode_count + 1):
                 #total_profit += price_data[t] - bought_price
                 this_profit = 100 * (price_data[t] - bought_price) / bought_price
                 total_profit = total_profit + this_profit
+                total_count += 1
+                if this_profit > 0:
+                    sucess_count += 1
             agent.inventory = []
             print "--------------------------------"
             print "Total Profit: " + formatPrice(total_profit)
+            print "success rate: {0:.2f} %".format(sucess_count/total_count * 100)
             print "--------------------------------"
             with open('Profit.txt', 'a') as f:
                 f.write("{0}\n".format(total_profit))
             with open('Profit_history.txt','a') as f:
                 f.write("{0},{1}\n".format(agent.episode + e, ','.join(total_profits)))
+            with open('success_rate_history.txt','a') as f:
+                f.write("{0},{1:.2f}\n".format(agent.episode + e,sucess_count/total_count * 100))
 
         if len(agent.memory) > batch_size:
             agent.expReplay(batch_size)
 
     if e % 1 == 0:
         agent.model.save("models/{0}_model_ep{1}".format(stock_name, e + agent.episode))
+        old_model_name = "models/{0}_model_ep{1}".format(stock_name, e + agent.episode - 5)
+        if os.path.exists(old_model_name):
+            os.remove(old_model_name)

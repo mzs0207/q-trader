@@ -44,9 +44,10 @@ def getStockDataVec(key):
             mean_total_volume = mean_total_volume/(1 - math.pow(p, t))
             temp_arr.append((high_price - low_price)/low_price)
             temp_arr.append((high_price - open_price)/open_price)
-            temp_arr.append((low_price - close_price)/close_price)
-            temp_arr.append((low_price - open_price)/open_price)
+            temp_arr.append((high_price - close_price)/close_price)
             temp_arr.append((close_price - open_price)/open_price)
+            temp_arr.append((close_price - low_price)/low_price)
+            temp_arr.append((open_price - low_price)/low_price)
             if last_close == 0:
                 temp_arr.append(0)
             else:
@@ -59,11 +60,11 @@ def getStockDataVec(key):
             if last_low == 0:
                 temp_arr.append(0)
             else:
-                temp_arr.append((low_price - last_low)/low_price)
+                temp_arr.append((low_price - last_low)/last_low)
             if last_high == 0:
                 temp_arr.append(0)
             else:
-                temp_arr.append((high_price - low_price)/low_price)
+                temp_arr.append((high_price - last_high)/last_high)
 
             v = total_volume/mean_total_volume
             temp_arr.append(v)
@@ -93,10 +94,12 @@ def getState(data, t, n):
         #res.append(block[i + 1] - block[i])
         temp_arr = block[i]
         #res.append(temp_arr[0])
-        for m in temp_arr:
-            res.append(m)
+        # for m in temp_arr:
+        #     res.append(m)
+        res.append(temp_arr)
 
-    return np.array([res])
+    np_data = np.array([res])
+    return np_data
 
 
 def get_state_rsi(data, t, n):
