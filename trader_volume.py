@@ -16,7 +16,7 @@ with open('config.json') as f:
 
 print config
 window_size = 32
-agent = Agent(window_size * 10, 'k_data_10')
+agent = Agent(window_size * 10, 'k_data_1d')
 batch_size = 32
 total_profit = 0
 agent.inventory = []
@@ -56,9 +56,10 @@ def get_bitmex_data():
         mean_total_volume = mean_total_volume / (1 - math.pow(p, t))
         temp_arr.append((high_price - low_price) / low_price)
         temp_arr.append((high_price - open_price) / open_price)
-        temp_arr.append((low_price - close_price) / close_price)
-        temp_arr.append((low_price - open_price) / open_price)
+        temp_arr.append((high_price - close_price) / close_price)
         temp_arr.append((close_price - open_price) / open_price)
+        temp_arr.append((close_price - low_price) / low_price)
+        temp_arr.append((open_price - low_price) / low_price)
         if last_close == 0:
             temp_arr.append(0)
         else:
@@ -71,11 +72,11 @@ def get_bitmex_data():
         if last_low == 0:
             temp_arr.append(0)
         else:
-            temp_arr.append((low_price - last_low) / low_price)
+            temp_arr.append((low_price - last_low) / last_low)
         if last_high == 0:
             temp_arr.append(0)
         else:
-            temp_arr.append((high_price - low_price) / low_price)
+            temp_arr.append((high_price - last_high) / last_high)
 
         v = total_volume / mean_total_volume
         temp_arr.append(v)
@@ -110,7 +111,7 @@ while 1:
         print "{0} action:{1}".format(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), op)
         if action == 1 and len(agent.inventory) < 1:  # buy
             try:
-                exchange.create_market_buy_order('BTC/USD', 30)
+                #exchange.create_market_buy_order('BTC/USD', 30)
                 agent.inventory.append(closes[-1])
                 total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
                 print "Buy:{0}".format(closes[-1])
@@ -119,7 +120,7 @@ while 1:
 
         elif action == 2 and len(agent.inventory) > 0:  # sell
             try:
-                exchange.create_market_sell_order("BTC/USD", 30)
+                #exchange.create_market_sell_order("BTC/USD", 30)
                 buy_price = agent.inventory.pop(0)
                 total_profit += (1.0 / buy_price - 1.0 / closes[-1]) * 30 * 1000
                 total_profit -= 30.0 / closes[-1] * 1000.0 * 0.00075
