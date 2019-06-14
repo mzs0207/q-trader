@@ -4,7 +4,7 @@ from collections import deque
 
 from keras.models import Sequential
 from keras.models import load_model
-from keras.layers import Dense
+from keras.layers import Dense, Dropout
 from keras.optimizers import Adam
 import numpy as np
 import os
@@ -32,7 +32,9 @@ class Agent:
     def _model(self):
         model = Sequential()
         model.add(Dense(units=64, input_dim=self.state_size, activation="relu"))
+        model.add(Dropout(0.2))
         model.add(Dense(units=32, activation="relu"))
+        model.add(Dropout(0.2))
         model.add(Dense(units=8, activation="relu"))
         model.add(Dense(self.action_size, activation="linear"))
         model.compile(loss="mse", optimizer=Adam(lr=0.001))

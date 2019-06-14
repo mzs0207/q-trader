@@ -15,11 +15,7 @@ def getStockDataVec(key):
     money_vec = []
     lines = open("data/" + key + ".csv", "r").read().splitlines()
 
-    mean_total_volume = 0
     last_close = 0
-    last_open = 0
-    last_low = 0
-    last_high = 0
     t = 1
     p = 0.8
     for line in lines[1:]:
@@ -34,45 +30,16 @@ def getStockDataVec(key):
             low_price = float(arr[3])
             price_vec.append(close_price)
 
-            volume = float(arr[7]) / (close_price)
-            volume = volume / 1000.0
-            #temp_arr.append(mean_volume)
-            #print mean_volume
-            #print volume
             total_volume = (float(arr[5]) + float(arr[6])) / close_price
-            mean_total_volume = mean_total_volume * p + (1 - p) * total_volume
-            mean_total_volume = mean_total_volume/(1 - math.pow(p, t))
             temp_arr.append((high_price - low_price)/low_price)
             temp_arr.append((high_price - open_price)/open_price)
+            temp_arr.append((high_price - close_price)/close_price)
             temp_arr.append((low_price - close_price)/close_price)
             temp_arr.append((low_price - open_price)/open_price)
             temp_arr.append((close_price - open_price)/open_price)
-            if last_close == 0:
-                temp_arr.append(0)
-            else:
-                temp_arr.append((close_price - last_close)/last_close)
-            if last_open == 0:
-                temp_arr.append(0)
-            else:
-                temp_arr.append((open_price - last_open)/last_open)
-
-            if last_low == 0:
-                temp_arr.append(0)
-            else:
-                temp_arr.append((low_price - last_low)/last_low)
-            if last_high == 0:
-                temp_arr.append(0)
-            else:
-                temp_arr.append((high_price - last_high)/last_high)
-
-            v = total_volume/mean_total_volume
-            temp_arr.append(v)
-
+            temp_arr.append(total_volume)
             money_vec.append(temp_arr)
-            last_close = close_price
-            last_high = high_price
-            last_low = low_price
-            last_open = open_price
+
             t += 1
 
     return price_vec, money_vec
@@ -88,14 +55,16 @@ def getState(data, t, n):
     d = t - n + 1
     block = data[d:t + 1] if d >= 0 else -d * [data[0]] + data[0:t + 1]  # pad with t0
     res = []
+    total_arr = []
+    for i in range(len(block[0])):
+        total_arr.append(sum([abs(m[i]) for m in block]))
     for i in xrange(n - 1):
-        #res.append(sigmoid(block[i + 1] - block[i]))
-        #res.append(block[i + 1] - block[i])
         temp_arr = block[i]
-        #res.append(temp_arr[0])
-        for m in temp_arr:
-            res.append(m)
-
+        for j in range(len(temp_arr)):
+            if total_arr[j] == 0:
+                res.append(0)
+            else:
+                res.append(temp_arr[j] / total_arr[j])
     return np.array([res])
 
 
